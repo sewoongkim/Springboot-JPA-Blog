@@ -1,0 +1,54 @@
+1. 웹서비스 주소 http://localhost:8000
+2. Client KEY : d6975589efebee0f78f1ace3ab8deef3
+
+3. 카카오 로그인 콜백주소 http://localhost:8000/auth/kakao/callback
+4. 카카오 로그아웃 콜백 주소
+
+5. 카카오 동의
+	User 오브젝트 : id(번호). username, password, email
+	카카오로부터 받을 정보: profile정보(필수), email(선택)
+
+6. 로그인 요청 주소 (Get) 
+ 	https://kauth.kakao.com/oauth/authorize?client_id=d6975589efebee0f78f1ace3ab8deef3&redirect_uri=http://localhost:8000/auth/kakao/callback&response_type=code
+
+7. 응답받는 코드
+	http://localhost:8000/auth/kakao/callback?code=fVItKwV_TJIiJe8G9iXFKdSh3M2-_bVvXSxaojsWKVfw-5fRX1a25ntzKRImeQP3LtdILQo9dJkAAAGE28rTsA
+
+8.	토큰 발급 요청 주소 (POST) - http body에 데이터를 전달 (4가지 데이터를 담아라)
+	요청 주소 : https:/kauth.kakao.com/oauth/token
+	
+	 Content-type: application/x-www-form-urlencoded;charset=utf-8
+	 Request=authorization_code
+	 client_id=d6975589efebee0f78f1ace3ab8deef3
+	 redirect_uri=http://localhost:8000/auth/kakao/callback
+	 code={동적임}
+	 
+		 No  Name			Type	Description									Required
+		1. grant_type		String	authorization_code로 고정				O
+		2. client_id			String	앱 REST API 키 [내 애플리케이션] > [앱 키]에서 확인 가능	O
+		3. redirect_uri	String	인가 코드가 리다이렉트된 URI				O
+		4. code				String	인가 코드 받기 요청으로 얻은 인가 코드	O
+		5. client_secret	String	토큰 발급 시, 보안을 강화하기 위해 추가 확인하는 코드 [내 애플리케이션] > [보안]에서 설정 가능 ON 상태인 경우 필수 설정해야 함	X
+		
+	 Response
+		No	Name				Type		Description							Required
+		1.	token_type			String		토큰 타입, bearer로 고정			O
+		2.	access_token		String		사용자 액세스 토큰 값					O
+		3.	id_token				String		ID 토큰 값 OpenID Connect 확장 기능을 통해 발급되는 ID 토큰, Base64 인코딩 된 사용자 인증 정보 포함
+														제공 조건: OpenID Connect가 활성화 된 앱의 토큰 발급 요청인 경우
+														또는 scope에 openid를 포함한 추가 항목 동의 받기 요청을 거친 토큰 발급 요청인 경우	X
+		4.	expires_in		Integer		액세스 토큰과 ID 토큰의 만료 시간(초)
+														참고: 액세스 토큰과 ID 토큰의 만료 시간은 동일	O
+		5.	refresh_token	String		사용자 리프레시 토큰 값	O
+		6.	refresh_token_expires_in	Integer	리프레시 토큰 만료 시간(초)	O
+		7.	scope					String		인증된 사용자의 정보 조회 권한 범위 범위가 여러 개일 경우, 공백으로 구분
+														참고: OpenID Connect가 활성화된 앱의 토큰 발급 요청인 경우, ID 토큰이 함께 발급되며 scope 값에 openid 포함	X
+
+9. 토큰을 통한 사용자 정보 조회 (GET/POST)
+	1. 주소 : https://api.kakao.com/v2/user/me												
+			GET/POST /v2/user/me HTTP/1.1
+			Host: kapi.kakao.com
+	2. Header 값		
+		Authorization: Bearer ${ACCESS_TOKEN}/KakaoAK ${APP_ADMIN_KEY}
+		Content-type: application/x-www-form-urlencoded;charset=utf-8
+													
