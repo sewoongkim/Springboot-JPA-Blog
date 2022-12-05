@@ -25,8 +25,9 @@ public class UserApiController {
 		@Autowired
 		private UserService userService; 
 		
-		//@Autowired 
-		//private AuthenticationManager authenticationManager;
+		@Autowired 
+		private AuthenticationManager authenticationManager;
+
 		
 		@PostMapping("/auth/joinProc")
 		public ResponseDto<Integer> save(@RequestBody User user) {
@@ -40,8 +41,8 @@ public class UserApiController {
 		public  ResponseDto<Integer> update(@RequestBody User user) {
 			userService.회원수정(user);
 			
-		// Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
-	    // SecurityContextHolder.getContext().setAuthentication(authentication);
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
+	    SecurityContextHolder.getContext().setAuthentication(authentication);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(), 1);
 		}
 		//스프링 시큐리티 이용해서 로그인!!

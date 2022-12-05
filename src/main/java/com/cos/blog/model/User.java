@@ -1,7 +1,5 @@
 package com.cos.blog.model;
 
-import java.awt.geom.GeneralPath;
-import java.security.Timestamp;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -13,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -38,7 +34,7 @@ public class User {
 	private int id;  //sequence. auto_increment 
 	//프로젝트에서 연결된 DB의  넘버링 전략을 따라간다.
 	
-	@Column(nullable=false, length= 30, unique=true)
+	@Column(nullable=false, length= 100, unique=true)
 	private String username; 
 	
 	@Column(nullable=false, length=100)
@@ -53,10 +49,10 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private RoleType role;
 	
+	@Column(nullable=false, length=50)
+	private String oauth;  // kakao, google
+	
 	@CreatedDate //시간이 자동입력
 	private LocalDateTime createDate;
-	
-	
-	
 
 }
